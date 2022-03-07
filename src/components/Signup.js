@@ -11,12 +11,14 @@ import {
   Input
 } from 'reactstrap'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import { bindActionCreators, compose } from 'redux'
 import { userSignup } from '../actions/auth.actions'
+import { withRouter} from 'react-router-dom'
 
 export class Signup extends Component {
   state = {
     isValid: true,
+    allFieldsValid: true,
     passwordClasses: 'form-control',
     name: '',
     email: '',
@@ -35,9 +37,13 @@ export class Signup extends Component {
         isValid: false
       })
     } else {
-      let newUser = {name, email, company, phone, password, address}
-      console.log('newUser', newUser)
-      this.props.userSignup(newUser)
+      let newUser = { name, email, company, phone, password, address }
+      if (Object.values(newUser).includes("")) {
+        this.setState({ allFieldsValid: false })
+      } else {
+        this.props.userSignup(newUser)
+        this.props.history.push("/login");
+      }
     }
   }
 
@@ -80,7 +86,7 @@ export class Signup extends Component {
                   }
                 />
               </FormGroup>
-               <FormGroup>
+              <FormGroup>
                 <Label for="company">Company</Label>
                 <Input
                   type="text"
@@ -144,9 +150,12 @@ export class Signup extends Component {
                     this.setState({ verify_password: e.target.value })
                   }
                 />
-                {!this.state.isValid ? (
-                  <Alert color="danger">Passwords do not match</Alert>
-                ) : null}
+                {!this.state.isValid &&
+                  <Alert color="danger">Passwords do not match</Alert>}
+
+                {!this.state.allFieldsValid &&
+                  <Alert color="danger">Input is invalid</Alert>}
+
               </FormGroup>
               <Button color="primary" type="submit">
                 Submit
@@ -165,4 +174,9 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(null, mapDispatchToProps)(Signup)
+export default compose(
+  withRouter,
+  connect(null, mapDispatchToProps)
+)(Signup);
+
+// export default connect(null, mapDispatchToProps)(Signup)

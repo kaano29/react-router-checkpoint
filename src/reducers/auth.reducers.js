@@ -4,7 +4,8 @@ import {
   USER_LOGIN_FAILED,
   USER_SIGNUP_PENDING,
   USER_SIGNUP_SUCCESS,
-  USER_SIGNUP_FAILED
+  USER_SIGNUP_FAILED,
+  USER_LOGOUT
 } from '../actions/auth.actions'
 
 let initialState = {
@@ -28,6 +29,8 @@ export default(state = initialState, action) => {
       return {...state, isLoading: false}
     case USER_SIGNUP_FAILED:
       return {...state, isLoading: false, showSignupError: true}
+    case USER_LOGOUT:
+      return {...state, user: {}}
     default:
       return state;
   }

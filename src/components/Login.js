@@ -13,11 +13,17 @@ import {
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { userLogin } from '../actions/auth.actions'
+import { Link } from 'react-router-dom'
 
 class Login extends Component {
   state = {
     email: '',
     password: ''
+  }
+
+  handleOnSubmit = e => {
+    e.preventDefault()
+    this.props.userLogin({email: this.state.email, password: this.state.password})
   }
 
   render() {
@@ -32,7 +38,7 @@ class Login extends Component {
               boxShadow: '3px 3px 47px 0px rgba(0,0,0,0.5)'
             }}
           >
-            <Form>
+            <Form onSubmit={this.handleOnSubmit}>
               <FormGroup>
                 <Label for="email-field">Email</Label>
                 <Input
@@ -63,7 +69,7 @@ class Login extends Component {
               <Button className="mr-3" type="submit" color="primary">
                 Submit
               </Button>
-              <a href="/signup">Not a member?</a>
+              <Link to="/signup">Not a member?</Link>
             </Form>
           </Col>
         </Row>

@@ -6,10 +6,14 @@ import {
   NavbarToggler,
   NavbarBrand,
   Nav,
-  NavItem,
-  NavLink } from 'reactstrap';
+  NavItem
+} from 'reactstrap';
+import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { userLogout } from '../actions/auth.actions'
+import { bindActionCreators } from 'redux'
 
-export default class Example extends React.Component {
+class TopNav extends React.Component {
   state = {
     isOpen: false
   }
@@ -18,6 +22,11 @@ export default class Example extends React.Component {
       isOpen: !this.state.isOpen
     });
   }
+
+  onHandleLogOut = () => {
+    this.props.userLogout()
+  }
+
   render() {
     return (
       <div>
@@ -26,12 +35,10 @@ export default class Example extends React.Component {
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
-              <NavItem>
-                <a href="#" className="nav-link">Login</a>
-              </NavItem>
-              <NavItem>
-                <a href="#" className="nav-link">Signup</a>
-              </NavItem>
+              {!this.props.loggedIn ?
+                <NavItem><Link className='nav-link' to="/login">Login</Link></NavItem>
+                : <NavItem><a style={{cursor: 'pointer'}} className='nav-link' onClick={this.onHandleLogOut}>Log out</a></NavItem>}
+              {!this.props.loggedIn && <NavItem><Link className='nav-link' to="/signup">Signup</Link></NavItem>}
             </Nav>
           </Collapse>
         </Navbar>
@@ -39,3 +46,15 @@ export default class Example extends React.Component {
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    loggedIn: Object.keys(state.auth.user).length !== 0
+  }
+}
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+  userLogout
+}, dispatch)
+
+export default connect(mapStateToProps, mapDispatchToProps)(TopNav)
