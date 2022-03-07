@@ -8,7 +8,7 @@ export const USER_SIGNUP_FAILED = 'USER_SIGNUP_FAILED'
 
 export const USER_LOGOUT = 'USER_LOGOUT'
 
-const BASE_URL = 'http://localhost:8082'
+const BASE_URL = process.env.REACT_APP_API_URL
 
 export const userLogin = ({email, password}) => {
   return async (dispatch) => {
